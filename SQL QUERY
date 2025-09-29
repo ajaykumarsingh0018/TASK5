@@ -1,0 +1,71 @@
+-- ===============================
+-- Task 5: SQL Joins (Inner, Left, Right, Full)
+-- Objective: Learn to combine data from multiple tables
+-- ===============================
+
+-- Step 1: Create Customers Table
+CREATE TABLE Customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(100),
+    city VARCHAR(50)
+);
+
+-- Step 2: Create Orders Table
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY,
+    order_date DATE,
+    customer_id INT,
+    amount DECIMAL(10,2),
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+);
+
+-- Step 3: Insert Sample Data
+INSERT INTO Customers (customer_id, customer_name, city) VALUES
+(1, 'Alice', 'Delhi'),
+(2, 'Bob', 'Mumbai'),
+(3, 'Charlie', 'Bangalore'),
+(4, 'David', 'Hyderabad');
+
+INSERT INTO Orders (order_id, order_date, customer_id, amount) VALUES
+(101, '2025-09-01', 1, 500.00),
+(102, '2025-09-03', 2, 1500.00),
+(103, '2025-09-05', 1, 700.00),
+(104, '2025-09-07', 3, 1200.00);
+
+-- ===============================
+-- INNER JOIN: Only customers with orders
+-- ===============================
+SELECT Customers.customer_id, Customers.customer_name, Orders.order_id, Orders.amount
+FROM Customers
+INNER JOIN Orders
+ON Customers.customer_id = Orders.customer_id;
+
+-- ===============================
+-- LEFT JOIN: All customers, even without orders
+-- ===============================
+SELECT Customers.customer_id, Customers.customer_name, Orders.order_id, Orders.amount
+FROM Customers
+LEFT JOIN Orders
+ON Customers.customer_id = Orders.customer_id;
+
+-- ===============================
+-- RIGHT JOIN: All orders, even without customer data
+-- ===============================
+SELECT Customers.customer_id, Customers.customer_name, Orders.order_id, Orders.amount
+FROM Customers
+RIGHT JOIN Orders
+ON Customers.customer_id = Orders.customer_id;
+
+-- ===============================
+-- FULL OUTER JOIN: All customers + all orders
+-- (Simulated with UNION because MySQL/SQLite don’t support FULL JOIN)
+-- ===============================
+SELECT Customers.customer_id, Customers.customer_name, Orders.order_id, Orders.amount
+FROM Customers
+LEFT JOIN Orders
+ON Customers.customer_id = Orders.customer_id
+UNION
+SELECT Customers.customer_id, Customers.customer_name, Orders.order_id, Orders.amount
+FROM Customers
+RIGHT JOIN Orders
+ON Customers.customer_id = Orders.customer_id;
